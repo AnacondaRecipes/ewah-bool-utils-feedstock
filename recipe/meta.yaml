@@ -8,8 +8,6 @@ package:
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-','_') }}-{{ version }}.tar.gz
   sha256: eb901f46caef189de3a0c1f5ca06287cfaba7976ddf76fa1c1f3bce1b60b7ac3
-  #patches:
-  #  - patches/crossc-openmp.patch  # [linux]
 
 build:
   skip: true  # [py<39]
