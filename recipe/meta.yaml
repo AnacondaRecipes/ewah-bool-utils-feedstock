@@ -27,7 +27,7 @@ requirements:
     - wheel
   run:
     - python
-    - numpy {{ numpy }}
+    - numpy >=1.19.3,<3
 
 test:
   source_files:
