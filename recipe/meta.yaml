@@ -6,51 +6,52 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/ewah_bool_utils-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-','_') }}-{{ version }}.tar.gz
   sha256: eb901f46caef189de3a0c1f5ca06287cfaba7976ddf76fa1c1f3bce1b60b7ac3
-  patches:
-    - patches/crossc-openmp.patch  # [linux]
+  #patches:
+  #  - patches/crossc-openmp.patch  # [linux]
 
 build:
-  skip: true  # [py<39 or python_impl == 'pypy']
-  script: {{ PYTHON }} -m pip install . -vv
-  number: 1
+  skip: true  # [py<39]
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
 
 requirements:
   build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - cython                                 # [build_platform != target_platform]
-    - numpy                                  # [build_platform != target_platform]
-    - libgomp                                # [linux]
-    - setuptools
     - {{ compiler('c') }}
-    - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
   host:
     - python
-    - cython
-    - numpy
+    - cython >=3.0
+    - numpy >=2.0.0
     - pip
     - setuptools
   run:
     - python
 
 test:
+  source_files:
+    - ewah_bool_utils/tests
   imports:
     - ewah_bool_utils
   commands:
     - pip check
+    - pytest -v
   requires:
     - pip
+    - pytest
 
 about:
   home: https://pypi.org/project/ewah-bool-utils/
   summary: EWAH Bool Array utils for yt
+  description: EWAH Bool Array utils for yt
   license: Apache-2.0 AND BSD-3-Clause
   license_file:
     - LICENSE
     - ewah_bool_utils/cpp/LICENSE
+  license_family: OTHER
+  doc_url: https://pypi.org/project/ewah-bool-utils/
+  dev_url: https://github.com/yt-project/ewah_bool_utils/
 
 extra:
   recipe-maintainers:
