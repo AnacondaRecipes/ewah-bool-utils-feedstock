@@ -1,0 +1,47 @@
+From 6b62890b752711878e649341aaf9413571007d2b Mon Sep 17 00:00:00 2001
+From: Mohamed Sentissi <msentissi@anaconda.com>
+Date: Thu, 13 Feb 2025 12:22:52 -0500
+Subject: [PATCH] fix openmp test linking on windows
+
+---
+ setupext.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/setupext.py b/setupext.py
+index 93655a2..0f82b60 100644
+--- a/setupext.py
++++ b/setupext.py
+@@ -61,11 +61,11 @@ def check_for_openmp():
+         # TODO: make this work with mingw
+         # AFAICS there's no easy way to get the compiler distutils
+         # will be using until compilation actually happens
+-        compile_flag = "-openmp"
+-        link_flag = ""
++        compile_flags = ["-openmp"]
++        link_flags = []
+     else:
+-        compile_flag = "-fopenmp"
+-        link_flag = "-fopenmp"
++        compile_flags = ["-fopenmp"]
++        link_flags = ["-fopenmp"]
+ 
+     try:
+         os.chdir(tmp_dir)
+@@ -80,12 +80,12 @@ def check_for_openmp():
+             ccompiler.compile(
+                 ["test_openmp.c"],
+                 output_dir="objects",
+-                extra_postargs=[compile_flag],
++                extra_postargs=compile_flags,
+             )
+             ccompiler.link_executable(
+                 glob.glob(os.path.join("objects", "*")),
+                 "test_openmp",
+-                extra_postargs=[link_flag],
++                extra_postargs=link_flags,
+             )
+             output = (
+                 subprocess.check_output("./test_openmp")
+-- 
+2.45.2
+
