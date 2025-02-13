@@ -8,6 +8,7 @@ package:
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-','_') }}-{{ version }}.tar.gz
   sha256: eb901f46caef189de3a0c1f5ca06287cfaba7976ddf76fa1c1f3bce1b60b7ac3
+  # Fixing https://github.com/pypa/setuptools/issues/2417#issuecomment-723282622
   patches:    # [win]
     - patches/0001-fix-openmp-test-linking-on-windows.patch   # [win]
 
