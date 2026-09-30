@@ -8,8 +8,6 @@ package:
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-','_') }}-{{ version }}.tar.gz
   sha256: 9e1d472724debba95cdc8bd1ac7a082a84ce263dcf4e2700b20954fc9c0a5d65
-  patches:
-    - patches/0001-dont-install-tests-as-package-data.patch
 
 build:
   skip: true  # [py<311]
