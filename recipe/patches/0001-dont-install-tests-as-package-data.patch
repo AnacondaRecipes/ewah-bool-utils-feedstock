@@ -1,0 +1,24 @@
+From: imykhailov <imykhailov@anaconda.com>
+Subject: [PATCH] Don't install the tests/ directory as package data
+
+meson.build installs tests/__init__.py and tests/test_ewah_bool_utils.py
+as a `tests` subpackage alongside the built extension modules, shipping
+test files inside the installed conda package. Drop that install_sources
+call; source_files in meta.yaml already makes the tests available for
+the recipe's own test run.
+
+--- a/meson.build
++++ b/meson.build
+@@ -68,12 +68,6 @@ py.install_sources(
+     subdir: 'ewah_bool_utils',
+ )
+ 
+-py.install_sources(
+-    'tests/__init__.py',
+-    'tests/test_ewah_bool_utils.py',
+-    subdir: 'tests',
+-)
+-
+ # include headers as easily locatable data files
+ # to allow yt to link from a wheel
+ install_data(

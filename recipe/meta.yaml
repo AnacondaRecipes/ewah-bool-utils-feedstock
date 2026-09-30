@@ -1,20 +1,18 @@
 {% set name = "ewah-bool-utils" %}
-{% set version = "1.3.0" %}
+{% set version = "1.3.2" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-','_') }}-{{ version }}.tar.gz
-  sha256: 5768183dc723149bc8e9d6181d93bf69825f643034622cc275d919afb5f84668
-  # Fixing https://github.com/pypa/setuptools/issues/2417#issuecomment-723282622
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-','_') }}-{{ version }}.tar.gz
+  sha256: 9e1d472724debba95cdc8bd1ac7a082a84ce263dcf4e2700b20954fc9c0a5d65
   patches:
-    - patches/0001-fix-openmp-test-linking-on-windows.patch  # [win]
-    - patches/crossc-openmp.patch  # [not linux]
+    - patches/0001-dont-install-tests-as-package-data.patch
 
 build:
-  skip: true  # [py<39]
+  skip: true  # [py<311]
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
 
@@ -23,26 +21,26 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - llvm-openmp  # [not linux]
   host:
     - python
-    - cython >=3.0
-    - numpy {{ numpy }}
     - pip
-    - setuptools
-    - wheel
+    - meson-python >=0.18.0
+    - meson >=1.6.0
+    - ninja-base
+    - cython >=3.1.1
+    - numpy {{ numpy }}
   run:
     - python
-    - numpy >=1.19.3,<3
+    - numpy >=1.23.2,<3
 
 test:
   source_files:
-    - ewah_bool_utils/tests
+    - tests
   imports:
     - ewah_bool_utils
   commands:
     - pip check
-    - pytest -v
+    - pytest -vv
   requires:
     - pip
     - pytest
@@ -54,7 +52,7 @@ about:
   license: Apache-2.0 AND BSD-3-Clause
   license_file:
     - LICENSE
-    - ewah_bool_utils/cpp/LICENSE
+    - src/ewah_bool_utils/cpp/LICENSE
   license_family: OTHER
   doc_url: https://pypi.org/project/ewah-bool-utils/
   dev_url: https://github.com/yt-project/ewah_bool_utils/
